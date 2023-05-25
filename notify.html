@@ -1,0 +1,70 @@
+<script>
+// Request notification permission
+function requestNotificationPermission() {
+  if (!("Notification" in window)) {
+    console.log("This browser does not support desktop notification.");
+    return;
+  }
+
+  Notification.requestPermission()
+    .then(function (permission) {
+      if (permission === "granted") {
+        sendNotification("Notification permission granted!");
+      } else {
+        console.log("Notification permission denied.");
+      }
+    })
+    .catch(function (error) {
+      console.log("Error requesting notification permission:", error);
+    });
+}
+
+// Send notification
+function sendNotification(message) {
+  if (!("Notification" in window)) {
+    console.log("This browser does not support desktop notification.");
+    return;
+  }
+
+  if (Notification.permission === "granted") {
+    var options = {
+      body: message,
+      icon: "https://docs.google.com/drawings/d/e/2PACX-1vRI0pQbztNicAUhVmuelxgbDVWIMqk0DQdytm43AIFQRcJ3P4DlrVylbvRJzkCgYWrBZqN0yC2J04Rk/pub?w=343&h=361"
+    };
+    var notification = new Notification("Change Me", options);
+  } else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(function (permission) {
+      if (permission === "granted") {
+        var options = {
+          body: message,
+          icon: "https://docs.google.com/drawings/d/e/2PACX-1vRI0pQbztNicAUhVmuelxgbDVWIMqk0DQdytm43AIFQRcJ3P4DlrVylbvRJzkCgYWrBZqN0yC2J04Rk/pub?w=343&h=361"
+        };
+        var notification = new Notification("Change Me", options);
+      } else {
+        console.log("Notification permission denied.");
+      }
+    });
+  } else {
+    console.log("Notification permission is not granted.");
+  }
+}
+
+// Request notification permission when the page loads
+document.addEventListener("DOMContentLoaded", function () {
+  requestNotificationPermission();
+});
+
+// Generate a random word
+function getRandomWord() {
+  var words = ["apple", "banana", "cat", "dog", "elephant", "fish", "gorilla", "hamburger", "ice cream", "jellyfish"];
+  var randomIndex = Math.floor(Math.random() * words.length);
+  return words[randomIndex];
+}
+
+// Modify notification message in script.js
+document.getElementById("modifyButton").addEventListener("click", function () {
+  var randomWord = getRandomWord();
+  var message = "Random word: " + randomWord;
+  sendNotification(message);
+});
+</script>
